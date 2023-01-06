@@ -5,7 +5,7 @@ package mux
 
 import (
 	"bytes"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -28,7 +28,7 @@ func TestSchemeMatchers(t *testing.T) {
 		if resp.StatusCode != 200 {
 			t.Fatalf("expected a status code of 200, got %v", resp.StatusCode)
 		}
-		body, err := ioutil.ReadAll(resp.Body)
+		body, err := io.ReadAll(resp.Body)
 		if err != nil {
 			t.Fatalf("unexpected error reading body: %v", err)
 		}
