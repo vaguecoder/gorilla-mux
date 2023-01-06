@@ -1,0 +1,14 @@
+changelog:
+  exclude:
+    labels:
+      - exclude-from-release
+  categories:
+    - title: Release Version Details
+      labels:
+        - '*'
+    - title: Change Log
+      labels:
+        - '*'
+    - title: Contributors
+      labels:
+        - '*'
