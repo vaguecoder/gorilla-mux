@@ -31,17 +31,17 @@ func NewRouter() *Router {
 // It implements the http.Handler interface, so it can be registered to serve
 // requests:
 //
-//     var router = mux.NewRouter()
+//	var router = mux.NewRouter()
 //
-//     func main() {
-//         http.Handle("/", router)
-//     }
+//	func main() {
+//	    http.Handle("/", router)
+//	}
 //
-// Or, for Google App Engine, register it in a init() function:
+// Or, for Google App Engine, register it in an init() function:
 //
-//     func init() {
-//         http.Handle("/", router)
-//     }
+//	func init() {
+//	    http.Handle("/", router)
+//	}
 //
 // This will send all incoming requests to the router.
 type Router struct {
@@ -127,7 +127,7 @@ func copyRouteRegexp(r *routeRegexp) *routeRegexp {
 // Match attempts to match the given request against the router's registered routes.
 //
 // If the request matches a route of this router or one of its subrouters the Route,
-// Handler, and Vars fields of the the match argument are filled and this function
+// Handler, and Vars fields of the match argument are filled and this function
 // returns true.
 //
 // If the request does not match any of this router's or its subrouters' routes
@@ -233,7 +233,7 @@ func (r *Router) GetRoute(name string) *Route {
 // When false, if the route path is "/path", accessing "/path/" will not match
 // this route and vice versa.
 //
-// The re-direct is a HTTP 301 (Moved Permanently). Note that when this is set for
+// The re-direct is an HTTP 301 (Moved Permanently). Note that when this is set for
 // routes with a non-idempotent method (e.g. POST, PUT), the subsequent re-directed
 // request will be made as a GET by most clients. Use middleware or client settings
 // to modify this behaviour as needed.
@@ -364,7 +364,7 @@ func (r *Router) Walk(walkFn WalkFunc) error {
 }
 
 // SkipRouter is used as a return value from WalkFuncs to indicate that the
-// router that walk is about to descend down to should be skipped.
+// router that walk is about to descend to should be skipped.
 var SkipRouter = errors.New("skip this router")
 
 // WalkFunc is the type of the function called for each route visited by Walk.
@@ -554,7 +554,7 @@ func matchMapWithString(toCheck map[string]string, toMatch map[string][]string, 
 			return false
 		} else if v != "" {
 			// If value was defined as an empty string we only check that the
-			// key exists. Otherwise we also check for equality.
+			// key exists. Otherwise, we also check for equality.
 			valueExists := false
 			for _, value := range values {
 				if v == value {
@@ -582,7 +582,7 @@ func matchMapWithRegex(toCheck map[string]*regexp.Regexp, toMatch map[string][]s
 			return false
 		} else if v != nil {
 			// If value was defined as an empty string we only check that the
-			// key exists. Otherwise we also check for equality.
+			// key exists. Otherwise, we also check for equality.
 			valueExists := false
 			for _, value := range values {
 				if v.MatchString(value) {

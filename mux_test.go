@@ -2089,7 +2089,7 @@ func TestErrMatchNotFound(t *testing.T) {
 		t.Errorf("Expected ErrNotFound MatchErr, but was %v", match.MatchErr)
 	}
 
-	// Now lets add a 404 handler to subrouter
+	// Now let's add a 404 handler to subrouter
 	s.NotFoundHandler = http.NotFoundHandler()
 	req, _ = http.NewRequest("GET", "/sub/whatever", nil)
 

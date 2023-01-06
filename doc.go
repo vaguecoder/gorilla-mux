@@ -10,18 +10,18 @@ http.ServeMux, mux.Router matches incoming requests against a list of
 registered routes and calls a handler for the route that matches the URL
 or other conditions. The main features are:
 
-	* Requests can be matched based on URL host, path, path prefix, schemes,
-	  header and query values, HTTP methods or using custom matchers.
-	* URL hosts, paths and query values can have variables with an optional
-	  regular expression.
-	* Registered URLs can be built, or "reversed", which helps maintaining
-	  references to resources.
-	* Routes can be used as subrouters: nested routes are only tested if the
-	  parent route matches. This is useful to define groups of routes that
-	  share common conditions like a host, a path prefix or other repeated
-	  attributes. As a bonus, this optimizes request matching.
-	* It implements the http.Handler interface so it is compatible with the
-	  standard http.ServeMux.
+  - Requests can be matched based on URL host, path, path prefix, schemes,
+    header and query values, HTTP methods or using custom matchers.
+  - URL hosts, paths and query values can have variables with an optional
+    regular expression.
+  - Registered URLs can be built, or "reversed", which helps to maintaining
+    references to resources.
+  - Routes can be used as subrouters: nested routes are only tested if the
+    parent route matches. This is useful to define groups of routes that
+    share common conditions like a host, a path prefix or other repeated
+    attributes. As a bonus, this optimizes request matching.
+  - It implements the http.Handler interface, so it is compatible with the
+    standard http.ServeMux.
 
 Let's start registering a couple of URL paths and handlers:
 
@@ -173,7 +173,7 @@ request that matches "/static/*". This makes it easy to serve static files with 
 Now let's see how to build registered URLs.
 
 Routes can be named. All routes that define a name can have their URLs built,
-or "reversed". We define a name calling Name() on a route. For example:
+or "reversed". We define a name-calling Name() on a route. For example:
 
 	r := mux.NewRouter()
 	r.HandleFunc("/articles/{category}/{id:[0-9]+}", ArticleHandler).
@@ -184,7 +184,7 @@ key/value pairs for the route variables. For the previous route, we would do:
 
 	url, err := r.Get("article").URL("category", "technology", "id", "42")
 
-...and the result will be a url.URL with the following path:
+...and the result will be an url.URL with the following path:
 
 	"/articles/technology/42"
 
@@ -212,7 +212,7 @@ Regex support also exists for matching Headers within a route. For example, we c
 
 	r.HeadersRegexp("Content-Type", "application/(text|json)")
 
-...and the route will match both requests with a Content-Type of `application/json` as well as
+...and the route will match both requests with a Content-Type of `application/json` and
 `application/text`
 
 There's also a way to build only the URL host or path for a route:
@@ -301,6 +301,5 @@ A more complex authentication middleware, which maps session token to users, cou
 	r.Use(amw.Middleware)
 
 Note: The handler chain will be stopped if your middleware doesn't call `next.ServeHTTP()` with the corresponding parameters. This can be used to abort a request if the middleware writer wants to.
-
 */
 package mux
