@@ -17,10 +17,10 @@ their respective handler.
 
 The name mux stands for "HTTP request multiplexer". Like the standard `http.ServeMux`, `mux.Router` matches incoming requests against a list of registered routes and calls a handler for the route that matches the URL or other conditions. The main features are:
 
-* It implements the `http.Handler` interface so it is compatible with the standard `http.ServeMux`.
+* It implements the `http.Handler` interface so, it is compatible with the standard `http.ServeMux`.
 * Requests can be matched based on URL host, path, path prefix, schemes, header and query values, HTTP methods or using custom matchers.
 * URL hosts, paths and query values can have variables with an optional regular expression.
-* Registered URLs can be built, or "reversed", which helps maintaining references to resources.
+* Registered URLs can be built, or "reversed", which helps to maintain references to resources.
 * Routes can be used as subrouters: nested routes are only tested if the parent route matches. This is useful to define groups of routes that share common conditions like a host, a path prefix or other repeated attributes. As a bonus, this optimizes request matching.
 
 ---
@@ -307,7 +307,7 @@ func main() {
 
 Now let's see how to build registered URLs.
 
-Routes can be named. All routes that define a name can have their URLs built, or "reversed". We define a name calling `Name()` on a route. For example:
+Routes can be named. All routes that define a name can have their URLs built, or "reversed". We define a name-calling `Name()` on a route. For example:
 
 ```go
 r := mux.NewRouter()
@@ -381,8 +381,8 @@ url, err := r.Get("article").URL("subdomain", "news",
 
 ### Walking Routes
 
-The `Walk` function on `mux.Router` can be used to visit all of the routes that are registered on a router. For example,
-the following prints all of the registered routes:
+The `Walk` function on `mux.Router` can be used to visit all the routes that are registered on a router. For example,
+the following prints all the registered routes:
 
 ```go
 package main
@@ -515,7 +515,7 @@ Mux middlewares are defined using the de facto standard type:
 type MiddlewareFunc func(http.Handler) http.Handler
 ```
 
-Typically, the returned handler is a closure which does something with the http.ResponseWriter and http.Request passed to it, and then calls the handler passed as parameter to the MiddlewareFunc. This takes advantage of closures being able access variables from the context where they are created, while retaining the signature enforced by the receivers.
+Typically, the returned handler is a closure which does something with the http.ResponseWriter and http.Request passed to it, and then calls the handler passed as parameter to the MiddlewareFunc. This takes advantage of closures being able to access variables from the context where they are created, while retaining the signature enforced by the receivers.
 
 A very basic middleware which logs the URI of the request being handled could be written as:
 
@@ -623,7 +623,7 @@ func fooHandler(w http.ResponseWriter, r *http.Request) {
 }
 ```
 
-And an request to `/foo` using something like:
+And a request to `/foo` using something like:
 
 ```bash
 curl localhost:8080/foo -v
