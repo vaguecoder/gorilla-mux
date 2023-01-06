@@ -1,5 +1,5 @@
 ---
-name: Misc
+name: Misc. Request
 about: Misc. request could be anything between feature & a bug, but doesn't sit right in one.
 title: "[Misc] <Subject-here>"
 labels: misc, triage
