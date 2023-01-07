@@ -1,0 +1,18 @@
+on: [push, pull_request]
+name: CodeQL
+jobs:
+  codeql-analyze:
+    strategy:
+      matrix:
+        go-version: [1.19.x]
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v2
+      with:
+        languages: go
+    - name: Checkout Code
+      uses: actions/checkout@v3.3.0
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v2
