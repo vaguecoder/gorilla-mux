@@ -64,7 +64,8 @@ func (r *Route) Match(req *http.Request, match *RouteMatch) bool {
 				match.MatchErr = nil
 			}
 
-			matchErr = nil
+			// inefficient assignment
+			// matchErr = nil
 			return false
 		}
 	}

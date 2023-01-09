@@ -195,7 +195,7 @@ func (r *routeRegexp) Match(req *http.Request, match *RouteMatch) bool {
 
 // url builds a URL part using the given values.
 func (r *routeRegexp) url(values map[string]string) (string, error) {
-	urlValues := make([]interface{}, len(r.varsN), len(r.varsN))
+	urlValues := make([]interface{}, len(r.varsN))
 	for k, v := range r.varsN {
 		value, ok := values[v]
 		if !ok {
@@ -239,7 +239,7 @@ func (r *routeRegexp) getURLQuery(req *http.Request) string {
 
 // findFirstQueryKey returns the same result as (*url.URL).Query()[key][0].
 // If key was not found, empty string and false is returned.
-func findFirstQueryKey(rawQuery, key string) (value string, ok bool) {
+func findFirstQueryKey(rawQuery, key string) (string, bool) {
 	query := []byte(rawQuery)
 	for len(query) > 0 {
 		foundKey := query
