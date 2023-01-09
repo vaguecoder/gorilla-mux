@@ -7,12 +7,12 @@ import (
 	mux "github.com/vaguecoder/gorilla-mux"
 )
 
-// Define our struct
+// Define our struct.
 type authenticationMiddleware struct {
 	tokenUsers map[string]string
 }
 
-// Initialize it somewhere
+// Initialize it somewhere.
 func (amw *authenticationMiddleware) Populate() {
 	amw.tokenUsers["00000000"] = "user0"
 	amw.tokenUsers["aaaaaaaa"] = "userA"
@@ -20,7 +20,7 @@ func (amw *authenticationMiddleware) Populate() {
 	amw.tokenUsers["deadbeef"] = "user0"
 }
 
-// Middleware function, which will be called for each request
+// Middleware function, which will be called for each request.
 func (amw *authenticationMiddleware) Middleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		token := r.Header.Get("X-Session-Token")

@@ -239,13 +239,22 @@ as well:
 	                                 "category", "technology",
 	                                 "id", "42")
 
-Mux supports the addition of middlewares to a Router, which are executed in the order they are added if a match is found, including its subrouters. Middlewares are (typically) small pieces of code which take one request, do something with it, and pass it down to another middleware or the final handler. Some common use cases for middleware are request logging, header manipulation, or ResponseWriter hijacking.
+Mux supports the addition of middlewares to a Router, which are executed in the
+order they are added if a match is found, including its subrouters. Middlewares
+are (typically) small pieces of code which take one request, do something with
+it, and pass it down to another middleware or the final handler. Some common use
+cases for middleware are request logging, header manipulation, or ResponseWriter
+hijacking.
 
 	type MiddlewareFunc func(http.Handler) http.Handler
 
-Typically, the returned handler is a closure which does something with the http.ResponseWriter and http.Request passed to it, and then calls the handler passed as parameter to the MiddlewareFunc (closures can access variables from the context where they are created).
+Typically, the returned handler is a closure which does something with the
+http.ResponseWriter and http.Request passed to it, and then calls the handler
+passed as parameter to the MiddlewareFunc (closures can access variables from
+the context where they are created).
 
-A very basic middleware which logs the URI of the request being handled could be written as:
+A very basic middleware which logs the URI of the request being handled could be
+written as:
 
 	func simpleMw(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

@@ -71,7 +71,7 @@ type Router struct {
 	routeConf
 }
 
-// common route configuration shared between `Router` and `Route`
+// common route configuration shared between `Router` and `Route`.
 type routeConf struct {
 	// If true, "/path/foo%2Fbar/to" will match the path "/path/{var}/to"
 	useEncodedPath bool
@@ -180,7 +180,6 @@ func (r *Router) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 		}
 		// Clean path to canonical form and redirect.
 		if p := cleanPath(path); p != path {
-
 			// Added 3 lines (Philip Schlump) - It was dropping the query string and #whatever from query.
 			// This matches with fix in go 1.2 r.c. 4 for same problem.  Go Issue:
 			// http://code.google.com/p/go/issues/detail?id=5252
@@ -363,9 +362,9 @@ func (r *Router) Walk(walkFn WalkFunc) error {
 	return r.walk(walkFn, []*Route{})
 }
 
-// SkipRouter is used as a return value from WalkFuncs to indicate that the
+// ErrSkipRouter is used as a return value from WalkFuncs to indicate that the
 // router that walk is about to descend to should be skipped.
-var SkipRouter = errors.New("skip this router")
+var ErrSkipRouter = errors.New("skip this router")
 
 // WalkFunc is the type of the function called for each route visited by Walk.
 // At every invocation, it is given the current route, and the current router,
@@ -375,7 +374,7 @@ type WalkFunc func(route *Route, router *Router, ancestors []*Route) error
 func (r *Router) walk(walkFn WalkFunc, ancestors []*Route) error {
 	for _, t := range r.routes {
 		err := walkFn(t, r, ancestors)
-		if err == SkipRouter {
+		if err == ErrSkipRouter {
 			continue
 		}
 		if err != nil {
@@ -384,7 +383,7 @@ func (r *Router) walk(walkFn WalkFunc, ancestors []*Route) error {
 		for _, sr := range t.matchers {
 			if h, ok := sr.(*Router); ok {
 				ancestors = append(ancestors, t)
-				err := h.walk(walkFn, ancestors)
+				err = h.walk(walkFn, ancestors)
 				if err != nil {
 					return err
 				}
@@ -393,7 +392,7 @@ func (r *Router) walk(walkFn WalkFunc, ancestors []*Route) error {
 		}
 		if h, ok := t.handler.(*Router); ok {
 			ancestors = append(ancestors, t)
-			err := h.walk(walkFn, ancestors)
+			err = h.walk(walkFn, ancestors)
 			if err != nil {
 				return err
 			}
@@ -524,6 +523,7 @@ func mapFromPairsToRegex(pairs ...string) (map[string]*regexp.Regexp, error) {
 	}
 	m := make(map[string]*regexp.Regexp, length/2)
 	for i := 0; i < length; i += 2 {
+		//nolint:govet // err is shadowed but regex was new
 		regex, err := regexp.Compile(pairs[i+1])
 		if err != nil {
 			return nil, err

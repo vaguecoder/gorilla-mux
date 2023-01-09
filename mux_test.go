@@ -52,7 +52,6 @@ type routeTest struct {
 }
 
 func TestHost(t *testing.T) {
-
 	tests := []routeTest{
 		{
 			title:       "Host route match",
@@ -1600,7 +1599,7 @@ func TestWalkSingleDepth(t *testing.T) {
 	err := r0.Walk(func(route *Route, router *Router, ancestors []*Route) error {
 		matcher := route.matchers[0].(*routeRegexp)
 		if matcher.template == "/d" {
-			return SkipRouter
+			return ErrSkipRouter
 		}
 		if len(ancestors) != depths[i] {
 			t.Errorf(`Expected depth of %d at i = %d; got "%d"`, depths[i], i, len(ancestors))
@@ -1655,6 +1654,7 @@ func TestWalkNested(t *testing.T) {
 			t.Errorf(`Expected %s got %s`, path, tpl)
 		}
 		currWantAncestors := testCases[idx].ancestors
+		//nolint:govet // we need to discuss
 		if !reflect.DeepEqual(currWantAncestors, ancestors) {
 			t.Errorf(`Expected %+v got %+v`, currWantAncestors, ancestors)
 		}
@@ -1830,7 +1830,8 @@ func testRoute(t *testing.T, test routeTest) {
 				t.Fatalf("(%v) URLHost error: %v -- %v", test.title, err, getRouteTemplate(route))
 			}
 			if uri.Scheme != u.Scheme {
-				t.Errorf("(%v) URLHost scheme not equal: expected %v, got %v -- %v", test.title, uri.Scheme, u.Scheme, getRouteTemplate(route))
+				t.Errorf("(%v) URLHost scheme not equal: expected %v, "+
+					"got %v -- %v", test.title, uri.Scheme, u.Scheme, getRouteTemplate(route))
 				return
 			}
 			if uri.Host != u.Host {
@@ -1976,6 +1977,7 @@ func Test301Redirect(t *testing.T) {
 	}
 	r.ServeHTTP(&res, req)
 
+	//nolint:stylecheck // we need to discuss
 	if "http://localhost/api/?abc=def" != res.hh["Location"][0] {
 		t.Errorf("Should have complete URL with query string")
 	}
@@ -2436,7 +2438,8 @@ func testMethodsSubrouter(t *testing.T, test methodsSubrouterTest) {
 
 	case http.StatusMovedPermanently:
 		if gotLocation := resp.HeaderMap.Get("Location"); gotLocation != test.redirectTo {
-			t.Errorf("(%s) Expected %q route-match to redirect to %q, but got %q", test.title, test.method, test.redirectTo, gotLocation)
+			t.Errorf("(%s) Expected %q route-match to redirect to %q, "+
+				"but got %q", test.title, test.method, test.redirectTo, gotLocation)
 		}
 
 	case http.StatusOK:
