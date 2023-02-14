@@ -529,6 +529,23 @@ func TestPathPrefix(t *testing.T) {
 			pathTemplate: `/{v1:[0-9]{3}}/{v2:[0-9]{3}}`,
 			shouldMatch:  false,
 		},
+		{
+			title:       "PathPrefix route no leading slash, does not match",
+			route:       new(Route).PathPrefix("111"),
+			request:     newRequest("GET", "http://localhost111/222/333"),
+			vars:        map[string]string{},
+			path:        "111",
+			shouldMatch: false,
+		},
+		{
+			title:        "PathPrefix route without matching braces pattern, does not match",
+			route:        new(Route).PathPrefix("/111/{v1:[0-9]{3}"),
+			request:      newRequest("GET", "http://localhost/111/222/333"),
+			vars:         map[string]string{"222": "222"},
+			path:         "/111/222",
+			pathTemplate: `/111/{v1:[0-9]{3}`,
+			shouldMatch:  false,
+		},
 	}
 
 	for _, test := range tests {
@@ -1072,6 +1089,13 @@ func TestQueries(t *testing.T) {
 	}
 }
 
+func TestUnevenAmountOfQueries(t *testing.T) {
+	r := new(Route).Queries("foo")
+	if r != nil {
+		t.Errorf("Expected route to be %v, but got %v", nil, r)
+	}
+}
+
 func TestSchemes(t *testing.T) {
 	tests := []routeTest{
 		// Schemes
@@ -1538,6 +1562,33 @@ func TestStrictSlash(t *testing.T) {
 	}
 }
 
+func TestRouteErrorHandling(t *testing.T) {
+	r := NewRouter()
+
+	tests := []routeTest{
+		{
+			title:   "Route Error",
+			route:   r.NewRoute().Name("test").Name("test"),
+			request: newRequest("GET", "http://localhost/test"),
+			host:    "test",
+		},
+		{
+			title:   "Host Error",
+			route:   r.NewRoute().Name("test").Name("test").Host("test"),
+			request: newRequest("GET", "http://localhost/test"),
+			host:    "test",
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.title, func(t *testing.T) {
+			testRoute(t, test)
+			testTemplate(t, test)
+			testUseEscapedRoute(t, test)
+		})
+	}
+}
+
 func TestUseEncodedPath(t *testing.T) {
 	r := NewRouter()
 	r.UseEncodedPath()
@@ -1786,6 +1837,7 @@ func getRouteTemplate(route *Route) string {
 func testRoute(t *testing.T, test routeTest) {
 	request := test.request
 	route := test.route
+	_ = route.SkipClean()
 	vars := test.vars
 	shouldMatch := test.shouldMatch
 	query := test.query
@@ -2829,6 +2881,32 @@ func TestContextMiddleware(t *testing.T) {
 	rec := NewRecorder()
 	req := newRequest("GET", "/path/bar")
 	r.ServeHTTP(rec, req)
+}
+
+func TestBuildOnlyRoute(t *testing.T) {
+	r := NewRouter()
+	r.NewRoute().Name("buildonly").BuildOnly()
+
+	req := newRequest("GET", "http://localhost/buildonly")
+
+	match := new(RouteMatch)
+
+	if r.Match(req, match) {
+		t.Errorf("expected Match %v, got %v", false, true)
+	}
+}
+
+func TestGetHandler(t *testing.T) {
+	r := NewRouter()
+	route := r.NewRoute().Name("handler").HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
+		writer.Write([]byte("OK"))
+	})
+
+	h := route.GetHandler()
+
+	if h == nil {
+		t.Errorf("Expected non %v handler, but got %v", nil, h)
+	}
 }
 
 // mapToPairs converts a string map to a slice of string pairs
